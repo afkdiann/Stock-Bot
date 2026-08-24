@@ -34,7 +34,7 @@ async def main():
     ):
         if event.is_final_response():
             if event.content and event.content.parts:
-                print(f"Final Response: {event.content.parts[0].text}")
+                print(f"Final Response:\n {event.content.parts[0].text}")
 
 if __name__ == "__main__":
     asyncio.run(main())
