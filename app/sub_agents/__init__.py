@@ -1,3 +1,3 @@
-from .fundamentals_agent import fundamentals_agent
-from .news_analysis_agent import news_analysis_agent
-from .public_sentiments_agent import public_sentiments_agent
+from .fundamentals_agent.agent import fundamentals_agent
+from .news_analysis_agent.agent import news_analysis_agent
+from .public_sentiments_agent.agent import public_sentiments_agent
