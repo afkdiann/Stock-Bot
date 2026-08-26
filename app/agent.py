@@ -17,6 +17,17 @@ client = genai.Client(api_key=api_key)
 MODEL_NAME=os.environ.get("MODEL_NAME")
 
 def before_model_callback(callback_context: CallbackContext, llm_request: LlmRequest) -> Optional[LlmResponse]:
+    """
+    Callback function to check if the user is asking you whether they should buy, sell, or hold a stock.
+
+    Args:
+        callback_context: contains state and context information
+        llm_request: the LLM request being sent
+
+    Returns:
+        None if the request is not about buying, selling, or holding a stock
+        LlmResponse if the request is about buying, selling, or holding a stock
+    """
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=f"Check if the user is asking you whether they should buy, sell, or hold a stock. If it does, respond with 'true'. Otherwise, respond with 'false'. Here's the user's request: {llm_request}."
@@ -31,6 +42,17 @@ def before_model_callback(callback_context: CallbackContext, llm_request: LlmReq
     return None
 
 def after_model_callback(callback_context: CallbackContext, llm_response: LlmResponse) -> Optional[LlmResponse]:
+    """
+    Callback function to check if the LLM's response contains any suggestions to buy, sell, or hold a stock.
+
+    Args:
+        callback_context: contains state and context information
+        llm_response: the LLM response to check
+
+    Returns:
+        None if the response is not about buying, selling, or holding a stock
+        LlmResponse if the response is about buying, selling, or holding a stock
+    """
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=f"Check if the LLM's response contains any suggestions to buy, sell, or hold a stock. If it does, respond with 'true'. Otherwise, respond with 'false'. Here's the LLM's response: {llm_response}"
