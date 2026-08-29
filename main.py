@@ -4,6 +4,7 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from google.genai import types
 from app.agent import root_agent
+from app.sub_agents.fundamentals_agent.agent import fundamentals_agent
 
 session_service = InMemorySessionService()
 
@@ -18,13 +19,13 @@ async def main():
     SESSION_ID = session.id
 
     runner = Runner(
-        agent=root_agent,
+        agent=fundamentals_agent,
         app_name=APP_NAME,
         session_service=session_service
     )
 
     content = types.Content(
-        role='user', parts=[types.Part(text="Hello!")]
+        role='user', parts=[types.Part(text="What is the current price of Apple stock? (AAPL)")]
     )
 
     async for event in runner.run_async(
@@ -34,7 +35,7 @@ async def main():
     ):
         if event.is_final_response():
             if event.content and event.content.parts:
-                print(f"Final Response:\n {event.content.parts[0].text}")
+                print(f"Final Response:\n{event.content.parts[0].text}")
 
 if __name__ == "__main__":
     asyncio.run(main())
