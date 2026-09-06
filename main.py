@@ -4,7 +4,6 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from google.genai import types
 from app.agent import root_agent
-from app.sub_agents.fundamentals_agent.agent import fundamentals_agent
 
 session_service = InMemorySessionService()
 
@@ -19,7 +18,7 @@ async def main():
     SESSION_ID = session.id
 
     runner = Runner(
-        agent=fundamentals_agent,
+        agent=root_agent,
         app_name=APP_NAME,
         session_service=session_service
     )
