@@ -1,11 +1,16 @@
 import os 
 
-from google.adk.agents.llm_agent import LlmAgent
-from .prompt import RESEARCH_AGENT_PROMPT
+from google.adk.agents import ParallelAgent
+from app.sub_agents.fundamentals_agent.agent import fundamentals_agent
+from app.sub_agents.news_analysis_agent.agent import news_analysis_agent
+from app.sub_agents.public_sentiments_agent.agent import public_sentiments_agent
 
-research_agent = LlmAgent(
-    model=os.getenv("MODEL_NAME"),
+research_agent = ParallelAgent(
     name="research_agent",
     description="An agent with access to the internet to do general research on investments",
-    instruction=RESEARCH_AGENT_PROMPT,
+    sub_agents=[
+        fundamentals_agent,
+        news_analysis_agent,
+        public_sentiments_agent,
+    ],
 )

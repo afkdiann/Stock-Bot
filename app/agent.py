@@ -2,19 +2,16 @@ import os
 
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.agents.callback_context import CallbackContext
-from google.adk.tools.agent_tool import AgentTool
 from google.adk.models import LlmRequest, LlmResponse
 from google import genai
 from google.genai import types
-from .prompt import ORCHESTRATOR_PROMPT
-from .sub_agents.fundamentals_agent.agent import fundamentals_agent
-from .sub_agents.news_analysis_agent.agent import news_analysis_agent
-from .sub_agents.public_sentiments_agent.agent import public_sentiments_agent
+from .prompt import ROOT_AGENT_PROMPT
+from .sub_agents.orchestrator_agent.agent import orchestrator_agent
 
-api_key = os.environ.get("GOOGLE_API_KEY")
+api_key = os.getenv("GOOGLE_API_KEY")
 client = genai.Client(api_key=api_key)
 
-MODEL_NAME=os.environ.get("MODEL_NAME")
+MODEL_NAME=os.getenv("MODEL_NAME")
 
 def before_model_callback(callback_context: CallbackContext, llm_request: LlmRequest) -> Optional[LlmResponse]:
     """
@@ -68,13 +65,11 @@ def after_model_callback(callback_context: CallbackContext, llm_response: LlmRes
 
 root_agent = LlmAgent(
     model=MODEL_NAME,
-    name='stock_analysis_orchestrator',
-    description='Stock Analysis Orchestrator',
-    instruction=ORCHESTRATOR_PROMPT,
-    tools=[
-        AgentTool(agent=fundamentals_agent),
-        AgentTool(agent=news_analysis_agent),
-        AgentTool(agent=public_sentiments_agent),
+    name='root_agent',
+    description='Agent that talks to the user directly.',
+    instruction=ROOT_AGENT_PROMPT,
+    sub_agents=[
+        orchestrator_agent,
     ],
     before_model_callback=before_model_callback,
     after_model_callback=after_model_callback
